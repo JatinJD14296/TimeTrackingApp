@@ -113,9 +113,23 @@ const SettingScreen = ({ navigation }) => {
             onColor={colors?.appColor}
             offColor="grey"
             size="medium"
-            onToggle={(value) => {
-              dispatch({ type: APP_THEME, payload: !value });
+            onToggle={ async (value) => {
               setLightMode(!value);
+              await axios
+              .put(baseURL +`user/${loginUser[0]?.userName}`, {
+                theme: value,
+                update: 'Theme',
+              })
+              .then((res) => {
+                if (res?.status === 200) {
+                  dispatch({ type: APP_THEME, payload: !value });
+                } else {
+                  Alert.alert("Error", response?.data?.error || "Login failed");
+                }
+              })
+              .catch((err) => {
+                Alert.alert("Error", err.message || "Login failed");
+              });
             }}
             thumbOnStyle={{ backgroundColor: "#fff" }}
           />
@@ -140,11 +154,10 @@ const SettingScreen = ({ navigation }) => {
           value={value}
           onChange={async (item) => {
             setValue(item.value);
-            // dispatch({ type: FONT_SIZE, payload: item?.value });
-
             await axios
-              .put(`baseURL +"user/${loginUser[0]?.id}`, {
+              .put(baseURL +`user/${loginUser[0]?.userName}`, {
                 fontSize: item?.value,
+                update: 'FontSize',
               })
               .then((res) => {
                 if (res?.status === 200) {
