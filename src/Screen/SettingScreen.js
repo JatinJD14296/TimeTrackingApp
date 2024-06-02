@@ -117,8 +117,8 @@ const SettingScreen = ({ navigation }) => {
               setLightMode(!value);
               await axios
               .put(baseURL +`user/${loginUser[0]?.userName}`, {
-                theme: value,
-                update: 'Theme',
+                theme: value ? colors?.lightModeBg : colors?.darkModeBg,
+                type: 'Theme',
               })
               .then((res) => {
                 if (res?.status === 200) {
@@ -155,10 +155,10 @@ const SettingScreen = ({ navigation }) => {
           onChange={async (item) => {
             setValue(item.value);
             await axios
-              .put(baseURL +`user/${loginUser[0]?.userName}`, {
-                fontSize: item?.value,
-                update: 'FontSize',
-              })
+            .put(baseURL +`user/${loginUser[0]?.userName}`, {
+              theme: item?.value,
+              type: 'FontSize',
+            })
               .then((res) => {
                 if (res?.status === 200) {
                   dispatch({ type: FONT_SIZE, payload: item?.value });
